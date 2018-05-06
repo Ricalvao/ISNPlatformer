@@ -25,7 +25,6 @@ public class PlayScreen implements Screen{
     private Viewport gamePort;
 
     //Tiled map variables
-    private TmxMapLoader maploader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
@@ -47,8 +46,7 @@ public class PlayScreen implements Screen{
         gamePort = new FitViewport(Platformer.SCREEN_WIDTH * Platformer.SCALE, Platformer.SCREEN_HEIGHT * Platformer.SCALE, gamecam);
 
         //Load our map and setup our map renderer
-        maploader = new TmxMapLoader();
-        map = maploader.load("level1.tmx");
+        map = new TmxMapLoader().load("testlevel.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 * Platformer.SCALE);
 
         //initially set our gamcam to be centered correctly at the start of of map

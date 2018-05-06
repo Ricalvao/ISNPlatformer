@@ -46,7 +46,7 @@ public class Chell extends Sprite{
 
         //get run animation frames and add them to marioRun Animation
         for(int i = 1; i < 4; i++) {
-        	frames.add(new TextureRegion(new Texture("sprites//run_" + i + ".png")));
+        	frames.add(new TextureRegion(new Texture("sprites\\run_" + i + ".png")));
         }
             
         run = new Animation<TextureRegion>(0.1f, frames);
@@ -54,13 +54,13 @@ public class Chell extends Sprite{
         frames.clear();
 
         //get jump animation frames and add them to marioJump Animation
-        jump = new TextureRegion(new Texture("sprites//jump.png"));
+        jump = new TextureRegion(new Texture("sprites\\jump.png"));
 
         //create texture region for mario standing
-        stand = new TextureRegion(new Texture("sprites//stand.png"));
+        stand = new TextureRegion(new Texture("sprites\\stand.png"));
 
         //create dead mario texture region
-        dead = new TextureRegion(new Texture("sprites//dead.png"));
+        dead = new TextureRegion(new Texture("sprites\\dead.png"));
 
         //define mario in Box2d
         defineChell();
