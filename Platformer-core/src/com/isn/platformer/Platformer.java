@@ -20,9 +20,9 @@ public class Platformer extends Game {
 	public static final short GROUND_BIT = 1;
 	public static final short CHELL_BIT = 2;
 	public static final short ENEMY_BIT = 4;
-	public static final short RED_PAINT_BIT = 8;
-	public static final short ORANGE_PAINT_BIT = 16;
-	public static final short BLUE_PAINT_BIT = 32;
+	public static final short RED_GEL_BIT = 8;
+	public static final short ORANGE_GEL_BIT = 16;
+	public static final short BLUE_GEL_BIT = 32;
 	public static final short LIGHT_BRIDGE_BIT = 64;
 	public static final short LASER_BIT = 128;
 	public static final short OBJECT_BIT = 256;

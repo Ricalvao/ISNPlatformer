@@ -33,6 +33,8 @@ public class Chell extends Sprite{
     private float stateTimer;
     private boolean runningRight;
     private boolean chellIsDead;
+    
+    public boolean orange;
 
     public Chell(PlayScreen screen){
         //initialize default values
@@ -184,9 +186,9 @@ public class Chell extends Sprite{
         fdef.filter.categoryBits =  Platformer.CHELL_BIT;
         fdef.filter.maskBits = Platformer.GROUND_BIT |
         					   Platformer.ENEMY_BIT |
-        		               Platformer.RED_PAINT_BIT|
-        		               Platformer.ORANGE_PAINT_BIT|
-        		               Platformer.BLUE_PAINT_BIT|
+        		               Platformer.RED_GEL_BIT|
+        		               Platformer.ORANGE_GEL_BIT|
+        		               Platformer.BLUE_GEL_BIT|
         		               Platformer.LIGHT_BRIDGE_BIT|
         		               Platformer.OBJECT_BIT;
 
@@ -196,6 +198,10 @@ public class Chell extends Sprite{
 
     public void fire(){
         //fireballs.add(new FireBall(screen, b2body.getPosition().x, b2body.getPosition().y, runningRight ? true : false));
+    }
+    
+    public void overOrange(boolean b){
+    	orange = b;
     }
 
     public void draw(Batch batch){

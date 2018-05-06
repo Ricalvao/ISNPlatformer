@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.isn.platformer.Platformer;
 import com.isn.platformer.Sprites.Chell;
+import com.isn.platformer.Sprites.Cube;
+import com.isn.platformer.Sprites.Enemy;
 import com.isn.platformer.Tools.WorldContactListener;
 import com.isn.platformer.Tools.WorldCreator;
 
@@ -35,6 +37,7 @@ public class PlayScreen implements Screen{
 
     //sprites
     private Chell player;
+    private Cube cube;
 
     public PlayScreen(Platformer game){
 
@@ -46,7 +49,7 @@ public class PlayScreen implements Screen{
         gamePort = new FitViewport(Platformer.SCREEN_WIDTH / Platformer.SCALE, Platformer.SCREEN_HEIGHT / Platformer.SCALE, gamecam);
 
         //Load our map and setup our map renderer
-        map = new TmxMapLoader().load("level1.tmx");
+        map = new TmxMapLoader().load("test1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / Platformer.SCALE);
 
         //initially set our gamcam to be centered correctly at the start of of map
@@ -61,6 +64,7 @@ public class PlayScreen implements Screen{
 
         //create mario in our game world
         player = new Chell(this);
+        cube = new Cube(this, 50, 32);
 
         world.setContactListener(new WorldContactListener());
     }
@@ -72,16 +76,32 @@ public class PlayScreen implements Screen{
     public void handleInput(float dt){
         //control our player using immediate impulses
         if(player.currentState != Chell.State.DEAD) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
+            
+        	if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 player.jump();
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.body.getLinearVelocity().x <= 2)
-                player.body.applyLinearImpulse(new Vector2(0.1f, 0), player.body.getWorldCenter(), true);
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.body.getLinearVelocity().x >= -2)
-                player.body.applyLinearImpulse(new Vector2(-0.1f, 0), player.body.getWorldCenter(), true);
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+            }
+        	
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 player.fire();
+            }
+            if(!player.orange) {
+            	if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.body.getLinearVelocity().x <= 2) {
+            		player.body.applyLinearImpulse(new Vector2(0.1f, 0), player.body.getWorldCenter(), true);
+            	}
+            
+            	if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.body.getLinearVelocity().x >= -2) {
+            		player.body.applyLinearImpulse(new Vector2(-0.1f, 0), player.body.getWorldCenter(), true);
+            	}
+            } else {
+            	if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.body.getLinearVelocity().x <= 8) {
+            		player.body.applyLinearImpulse(new Vector2(0.4f, 0), player.body.getWorldCenter(), true);
+            	}
+            
+            	if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.body.getLinearVelocity().x >= -8) {
+            		player.body.applyLinearImpulse(new Vector2(-0.4f, 0), player.body.getWorldCenter(), true);
+            	}
+            }
         }
-
     }
 
     public void update(float dt){
@@ -92,6 +112,13 @@ public class PlayScreen implements Screen{
         world.step(1 / 60f, 6, 2);
 
         player.update(dt);
+        for(Enemy enemy : creator.getEnemies()) {
+            enemy.update(dt);
+            if(enemy.getX() < player.getX() + 224 / Platformer.SCALE) {
+                enemy.body.setActive(true);
+            }
+        }
+        cube.update(dt);
 
         //attach our gamecam to our players.x coordinate
         gamecam.position.x = player.body.getPosition().x;
@@ -122,6 +149,9 @@ public class PlayScreen implements Screen{
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
+        for (Enemy enemy : creator.getEnemies())
+            enemy.draw(game.batch);
+        cube.draw(game.batch);
         game.batch.end();
 	}
 
