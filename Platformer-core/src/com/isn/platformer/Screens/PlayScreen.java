@@ -1,7 +1,5 @@
 package com.isn.platformer.Screens;
 
-import java.util.concurrent.LinkedBlockingQueue;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -16,6 +14,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.isn.platformer.Platformer;
+import com.isn.platformer.Sprites.Chell;
+import com.isn.platformer.Tools.WorldContactListener;
+import com.isn.platformer.Tools.WorldCreator;
 
 public class PlayScreen implements Screen{
 	private Platformer game;
@@ -58,7 +59,7 @@ public class PlayScreen implements Screen{
         //allows for debug lines of our box2d world.
         b2dr = new Box2DDebugRenderer();
 
-        creator = new B2WorldCreator(this);
+        creator = new WorldCreator(this);
 
         //create mario in our game world
         player = new Chell(this);
@@ -76,9 +77,9 @@ public class PlayScreen implements Screen{
             if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
                 player.jump();
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.body.getLinearVelocity().x <= 2)
-                player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.body.getWorldCenter(), true);
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
-                player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.body.getWorldCenter(), true);
+                player.body.applyLinearImpulse(new Vector2(0.1f, 0), player.body.getWorldCenter(), true);
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.body.getLinearVelocity().x >= -2)
+                player.body.applyLinearImpulse(new Vector2(-0.1f, 0), player.body.getWorldCenter(), true);
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
                 player.fire();
         }
@@ -95,7 +96,7 @@ public class PlayScreen implements Screen{
         player.update(dt);
 
         //attach our gamecam to our players.x coordinate
-        gamecam.position.x = player.b2body.getPosition().x;
+        gamecam.position.x = player.body.getPosition().x;
 
         //update our gamecam with correct coordinates after changes
         gamecam.update();
@@ -162,3 +163,4 @@ public class PlayScreen implements Screen{
         world.dispose();
         b2dr.dispose();
     }
+}

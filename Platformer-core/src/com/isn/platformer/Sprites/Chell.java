@@ -1,5 +1,6 @@
 package com.isn.platformer.Sprites;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -25,19 +26,16 @@ public class Chell extends Sprite{
     public Body body;
 
     private TextureRegion stand;
-    private Animation run;
+    private Animation<TextureRegion> run;
     private TextureRegion jump;
     private TextureRegion dead;
 
     private float stateTimer;
     private boolean runningRight;
-    private boolean marioIsBig;
     private boolean chellIsDead;
-    private PlayScreen screen;
 
     public Chell(PlayScreen screen){
         //initialize default values
-        this.screen = screen;
         this.world = screen.getWorld();
         currentState = State.STANDING;
         previousState = State.STANDING;
@@ -48,21 +46,21 @@ public class Chell extends Sprite{
 
         //get run animation frames and add them to marioRun Animation
         for(int i = 1; i < 4; i++) {
-        	frames.add(new TextureRegion(screen.getAtlas().findRegion("little_mario"), i * 16, 0, 16, 16));
+        	frames.add(new TextureRegion(new Texture("sprites//run_" + i + ".png")));
         }
             
-        run = new Animation(0.1f, frames);
+        run = new Animation<TextureRegion>(0.1f, frames);
 
         frames.clear();
 
         //get jump animation frames and add them to marioJump Animation
-        jump = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 80, 0, 16, 16);
+        jump = new TextureRegion(new Texture("sprites//jump.png"));
 
         //create texture region for mario standing
-        stand = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 0, 0, 16, 16);
+        stand = new TextureRegion(new Texture("sprites//stand.png"));
 
         //create dead mario texture region
-        dead = new TextureRegion(screen.getAtlas().findRegion("little_mario"), 96, 0, 16, 16);
+        dead = new TextureRegion(new Texture("sprites//dead.png"));
 
         //define mario in Box2d
         defineChell();
@@ -182,14 +180,14 @@ public class Chell extends Sprite{
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(6 * Platformer.SCALE);
-        fdef.filter.categoryBits =  * Platformer.CHELL_BIT;
+        fdef.filter.categoryBits =  Platformer.CHELL_BIT;
         fdef.filter.maskBits = Platformer.GROUND_BIT |
-        		Platformer.ENEMY_BIT |
-        		Platformer.RED_PAINT_BIT|
-        		Platformer.ORANGE_PAINT_BIT|
-        		Platformer.BLUE_PAINT_BIT|
-        		Platformer.LIGHT_BRIDGE_BIT|
-        		Platformer.OBJECT_BIT;
+        					   Platformer.ENEMY_BIT |
+        		               Platformer.RED_PAINT_BIT|
+        		               Platformer.ORANGE_PAINT_BIT|
+        		               Platformer.BLUE_PAINT_BIT|
+        		               Platformer.LIGHT_BRIDGE_BIT|
+        		               Platformer.OBJECT_BIT;
 
         fdef.shape = shape;
         body.createFixture(fdef).setUserData(this);
