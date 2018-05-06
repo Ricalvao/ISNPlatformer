@@ -66,15 +66,16 @@ public class Chell extends Sprite{
         defineChell();
 
         //set initial values for marios location, width and height. And initial frame as marioStand.
-        setBounds(0, 0, 16 * Platformer.SCALE, 16 * Platformer.SCALE);
+        setBounds(0, 0, 16 / Platformer.SCALE, 16 / Platformer.SCALE);
         setRegion(stand);
 
      }
 
     public void update(float dt){
     	//update our sprite to correspond with the position of our Box2D body
-        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
-    }
+        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2 + 3 / (2 * Platformer.SCALE));
+        //update sprite with the correct frame depending on marios current action
+        setRegion(getFrame(dt));    }
 
     public TextureRegion getFrame(float dt){
         //get marios current state. ie. jumping, running, standing...
@@ -173,13 +174,13 @@ public class Chell extends Sprite{
 
     public void defineChell(){
         BodyDef bdef = new BodyDef();
-        bdef.position.set(32 * Platformer.SCALE, 32 * Platformer.SCALE);
+        bdef.position.set(32 / Platformer.SCALE, 32 / Platformer.SCALE);
         bdef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(6 * Platformer.SCALE);
+        shape.setRadius(6 / Platformer.SCALE);
         fdef.filter.categoryBits =  Platformer.CHELL_BIT;
         fdef.filter.maskBits = Platformer.GROUND_BIT |
         					   Platformer.ENEMY_BIT |

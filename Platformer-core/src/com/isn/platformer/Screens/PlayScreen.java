@@ -43,11 +43,11 @@ public class PlayScreen implements Screen{
         gamecam = new OrthographicCamera();
 
         //create a FitViewport to maintain virtual aspect ratio despite screen size
-        gamePort = new FitViewport(Platformer.SCREEN_WIDTH * Platformer.SCALE, Platformer.SCREEN_HEIGHT * Platformer.SCALE, gamecam);
+        gamePort = new FitViewport(Platformer.SCREEN_WIDTH / Platformer.SCALE, Platformer.SCREEN_HEIGHT / Platformer.SCALE, gamecam);
 
         //Load our map and setup our map renderer
-        map = new TmxMapLoader().load("testlevel.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map, 1 * Platformer.SCALE);
+        map = new TmxMapLoader().load("level1.tmx");
+        renderer = new OrthogonalTiledMapRenderer(map, 1 / Platformer.SCALE);
 
         //initially set our gamcam to be centered correctly at the start of of map
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
@@ -117,7 +117,7 @@ public class PlayScreen implements Screen{
         renderer.render();
 
         //renderer our Box2DDebugLines
-        b2dr.render(world, gamecam.combined);
+        //b2dr.render(world, gamecam.combined);
 
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();

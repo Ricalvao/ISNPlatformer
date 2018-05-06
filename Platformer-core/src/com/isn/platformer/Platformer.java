@@ -13,7 +13,7 @@ public class Platformer extends Game {
 	public static final int SCREEN_HEIGHT = 208;
 	
 	//Echelle pour Box2D
-	public static final float SCALE = 1/100;
+	public static final float SCALE = 100;
 
 	//Bits pour les collisions
 	public static final short NOTHING_BIT = 0;

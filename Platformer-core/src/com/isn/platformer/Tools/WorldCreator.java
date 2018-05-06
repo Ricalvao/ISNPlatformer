@@ -29,11 +29,11 @@ public class WorldCreator {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) * Platformer.SCALE, (rect.getY() + rect.getHeight() / 2) * Platformer.SCALE);
+            bdef.position.set((rect.getX() + rect.getWidth() / 2) / Platformer.SCALE, (rect.getY() + rect.getHeight() / 2) / Platformer.SCALE);
 
             body = world.createBody(bdef);
 
-            shape.setAsBox(rect.getWidth() / 2 * Platformer.SCALE, rect.getHeight() / 2 * Platformer.SCALE);
+            shape.setAsBox(rect.getWidth() / 2 / Platformer.SCALE, rect.getHeight() / 2 / Platformer.SCALE);
             fdef.shape = shape;
             body.createFixture(fdef);
         }
