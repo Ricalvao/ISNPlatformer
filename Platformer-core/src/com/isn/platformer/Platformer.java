@@ -26,6 +26,7 @@ public class Platformer extends Game {
 	public static final short LIGHT_BRIDGE_BIT = 64;
 	public static final short LASER_BIT = 128;
 	public static final short OBJECT_BIT = 256;
+	public static final short POWER_BIT = 512;
 
 	public SpriteBatch batch;
 

@@ -10,6 +10,7 @@ import com.isn.platformer.Gels.RedGel;
 import com.isn.platformer.Sprites.Chell;
 import com.isn.platformer.Sprites.Cube;
 import com.isn.platformer.Sprites.Enemy;
+import com.isn.platformer.Sprites.Laser;
 
 public class WorldContactListener implements ContactListener {
     @Override
@@ -20,7 +21,7 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
         switch (cDef){
-            case Platformer.ENEMY_BIT | Platformer.OBJECT_BIT:
+            case Platformer.ENEMY_BIT | Platformer.GROUND_BIT:
                 if(fixA.getFilterData().categoryBits == Platformer.ENEMY_BIT)
                     ((Enemy)fixA.getUserData()).reverseVelocity(true, false);
                 else
@@ -42,13 +43,36 @@ public class WorldContactListener implements ContactListener {
                 else
                 	((Chell)fixB.getUserData()).overOrange(true);
                 break;
-            case Platformer.OBJECT_BIT | Platformer.RED_GEL_BIT:
-                if(fixA.getFilterData().categoryBits == Platformer.OBJECT_BIT) {
-                    ((Cube)fixA.getUserData()).turnOnOff(true);
+            case Platformer.POWER_BIT | Platformer.RED_GEL_BIT:
+                if(fixA.getFilterData().categoryBits == Platformer.POWER_BIT) {
                     ((RedGel)fixB.getUserData()).turnOnOff(true);
                 } else {
-                	((Cube)fixB.getUserData()).turnOnOff(true);
                 	((RedGel)fixA.getUserData()).turnOnOff(true);
+                }
+                break;
+            case Platformer.LASER_BIT | Platformer.ENEMY_BIT:
+                if(fixA.getFilterData().categoryBits == Platformer.ENEMY_BIT) {
+                    ((Enemy)fixA.getUserData()).hit();
+                    ((Laser)fixB.getUserData()).setToDestroy();
+                } else {
+                	((Enemy)fixB.getUserData()).hit();
+                	((Laser)fixA.getUserData()).setToDestroy();
+                }
+                break;
+            case Platformer.LASER_BIT | Platformer.GROUND_BIT:
+            	if(fixA.getFilterData().categoryBits == Platformer.LASER_BIT) {
+                    ((Laser)fixA.getUserData()).setToDestroy();
+                } else {
+                	((Laser)fixB.getUserData()).setToDestroy();
+                }
+                break;
+            case Platformer.LASER_BIT | Platformer.OBJECT_BIT:
+                if(fixA.getFilterData().categoryBits == Platformer.LASER_BIT) {
+                    ((Laser)fixA.getUserData()).setToDestroy();
+                    ((Cube)fixB.getUserData()).turnOn();
+                } else {
+                	((Laser)fixB.getUserData()).setToDestroy();
+                    ((Cube)fixA.getUserData()).turnOn();
                 }
                 break;
         }
@@ -68,13 +92,11 @@ public class WorldContactListener implements ContactListener {
                 else
                 	((Chell)fixB.getUserData()).overOrange(false);
                 break;
-            case Platformer.OBJECT_BIT | Platformer.RED_GEL_BIT:
-                if(fixA.getFilterData().categoryBits == Platformer.OBJECT_BIT) {
-                    ((Cube)fixA.getUserData()).turnOnOff(false);
-                	((RedGel)fixB.getUserData()).turnOnOff(false);
+            case Platformer.POWER_BIT | Platformer.RED_GEL_BIT:
+                if(fixA.getFilterData().categoryBits == Platformer.POWER_BIT) {
+                    ((RedGel)fixB.getUserData()).turnOnOff(false);
                 } else {
-                	((Cube)fixB.getUserData()).turnOnOff(false);
-            		((RedGel)fixA.getUserData()).turnOnOff(false);
+                	((RedGel)fixA.getUserData()).turnOnOff(false);
                 }
                 break;
         }

@@ -7,7 +7,6 @@ import com.isn.platformer.Platformer;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-	    System.setProperty("org.lwjgl.opengl.Display.allowSoftwareOpenGL", "true");
 		config.width = Platformer.SCREEN_WIDTH * 3;
 		config.height = Platformer.SCREEN_HEIGHT * 3;
 		new LwjglApplication(new Platformer(), config);

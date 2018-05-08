@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -13,11 +14,21 @@ import com.isn.platformer.Platformer;
 import com.isn.platformer.Screens.PlayScreen;
 
 public class Cube extends Sprite{
+	
 	protected World world;
     protected PlayScreen screen;
+    
     public Body body;
+    
     private TextureRegion cubeOff;
     private TextureRegion cubeOn;
+    
+    private boolean on;
+    
+    private float timer;
+    
+    private Filter onFilter;
+    private Filter offFilter;
     
     public Cube(PlayScreen screen, float x, float y){
         this.world = screen.getWorld();
@@ -29,10 +40,24 @@ public class Cube extends Sprite{
         cubeOn = new TextureRegion(new Texture("sprites//cube_2.png"));
         setBounds(getX(), getY(), 16 / Platformer.SCALE, 16 / Platformer.SCALE);
         setRegion(cubeOff);
+
+
+        onFilter = new Filter();
+        onFilter.categoryBits = Platformer.POWER_BIT;
+        offFilter = new Filter();
+        offFilter.categoryBits = Platformer.OBJECT_BIT;
+        
+    	timer = 0;
     }
 
     public void update(float dt){
-        setPosition(body.getPosition().x - getWidth() / 2 + 1 / (2 * Platformer.SCALE), body.getPosition().y - getWidth() / 2 + 1 / (2 * Platformer.SCALE));
+        timer += dt;
+    	setPosition(body.getPosition().x - getWidth() / 2 + 1 / (2 * Platformer.SCALE), body.getPosition().y - getWidth() / 2 + 1 / (2 * Platformer.SCALE));
+        if(timer > 3  && on) {
+        	setRegion(cubeOff);
+        	body.getFixtureList().get(0).setFilterData(offFilter);
+        	on = false;
+        }
     }
 
     protected void defineCube() {
@@ -55,16 +80,17 @@ public class Cube extends Sprite{
 	                           Platformer.BLUE_GEL_BIT|
 	                           Platformer.LIGHT_BRIDGE_BIT|
 	                           Platformer.CHELL_BIT|
-	                           Platformer.OBJECT_BIT;
+	                           Platformer.LASER_BIT|
+	                           Platformer.OBJECT_BIT|
+	                           Platformer.POWER_BIT;
         
         body.createFixture(fdef).setUserData(this);
     }
     
-    public void turnOnOff(boolean b) {
-    	if(!b) {
-    		setRegion(cubeOff);
-    	} else {
-    		setRegion(cubeOn);
-    	}
+    public void turnOn() {
+    	setRegion(cubeOn);
+    	on = true;
+    	body.getFixtureList().get(0).setFilterData(onFilter);
+    	timer = 0;
     }
 }

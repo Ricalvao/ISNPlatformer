@@ -77,28 +77,33 @@ public class PlayScreen implements Screen{
         //control our player using immediate impulses
         if(player.currentState != Chell.State.DEAD) {
             
-        	if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+        	if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
                 player.jump();
-            }
         	
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
                 player.fire();
-            }
+            
             if(!player.orange) {
+            	
             	if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.body.getLinearVelocity().x <= 2) {
             		player.body.applyLinearImpulse(new Vector2(0.1f, 0), player.body.getWorldCenter(), true);
+            		player.lookRight(true);
             	}
-            
+            	
             	if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.body.getLinearVelocity().x >= -2) {
             		player.body.applyLinearImpulse(new Vector2(-0.1f, 0), player.body.getWorldCenter(), true);
+        			player.lookRight(false);
             	}
             } else {
+            	
             	if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.body.getLinearVelocity().x <= 8) {
             		player.body.applyLinearImpulse(new Vector2(0.4f, 0), player.body.getWorldCenter(), true);
+        			player.lookRight(true);
             	}
-            
+            	
             	if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.body.getLinearVelocity().x >= -8) {
             		player.body.applyLinearImpulse(new Vector2(-0.4f, 0), player.body.getWorldCenter(), true);
+            		player.lookRight(false);
             	}
             }
         }
@@ -121,7 +126,9 @@ public class PlayScreen implements Screen{
         cube.update(dt);
 
         //attach our gamecam to our players.x coordinate
-        gamecam.position.x = player.body.getPosition().x;
+        if(player.currentState != Chell.State.DEAD) {
+            gamecam.position.x = player.body.getPosition().x;
+        }
 
         //update our gamecam with correct coordinates after changes
         gamecam.update();
@@ -144,7 +151,7 @@ public class PlayScreen implements Screen{
         renderer.render();
 
         //renderer our Box2DDebugLines
-        //b2dr.render(world, gamecam.combined);
+        b2dr.render(world, gamecam.combined);
 
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();

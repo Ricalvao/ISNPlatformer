@@ -32,7 +32,7 @@ public class Enemy extends Sprite{
         setPosition(x, y);
         defineEnemy();
         
-        velocity = new Vector2(-1, -2);
+        velocity = new Vector2(1, -2);
         body.setActive(false);
         
         frames = new Array<TextureRegion>();
@@ -58,10 +58,7 @@ public class Enemy extends Sprite{
         if(setToDestroy && !destroyed){
             world.destroyBody(body);
             destroyed = true;
-            setRegion((TextureRegion)null);
-            stateTime = 0;
-        }
-        else if(!destroyed) {
+        }else if(!destroyed) {
             body.setLinearVelocity(velocity);
             setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
             setRegion(walkAnimation.getKeyFrame(stateTime, true));
@@ -85,12 +82,18 @@ public class Enemy extends Sprite{
 	                           Platformer.BLUE_GEL_BIT|
 	                           Platformer.LIGHT_BRIDGE_BIT|
 	                           Platformer.CHELL_BIT|
-	                           Platformer.OBJECT_BIT;
+	                           Platformer.OBJECT_BIT|
+        		               Platformer.POWER_BIT|
+	                           Platformer.LASER_BIT;
 
         fdef.shape = shape;
         body.createFixture(fdef).setUserData(this);
     }
-
+    
+    public void hit() {
+        setToDestroy = true;
+    }
+    
     public void draw(Batch batch){
         if(!destroyed || stateTime < 1)
             super.draw(batch);

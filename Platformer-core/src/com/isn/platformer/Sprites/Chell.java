@@ -31,24 +31,28 @@ public class Chell extends Sprite{
     private TextureRegion dead;
 
     private float stateTimer;
-    private boolean runningRight;
+    private boolean lookingRight;
     private boolean chellIsDead;
+    private PlayScreen screen;
     
     public boolean orange;
 
+    private Array<Laser> lasers;
+    
     public Chell(PlayScreen screen){
         //initialize default values
         this.world = screen.getWorld();
+        this.screen = screen;
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
-        runningRight = true;
+        lookingRight = true;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
 
         //get run animation frames and add them to marioRun Animation
         for(int i = 1; i < 4; i++) {
-        	frames.add(new TextureRegion(new Texture("sprites\\run_" + i + ".png")));
+        	frames.add(new TextureRegion(new Texture("sprites\\gun_run_" + i + ".png")));
         }
             
         run = new Animation<TextureRegion>(0.1f, frames);
@@ -56,13 +60,13 @@ public class Chell extends Sprite{
         frames.clear();
 
         //get jump animation frames and add them to marioJump Animation
-        jump = new TextureRegion(new Texture("sprites\\jump.png"));
+        jump = new TextureRegion(new Texture("sprites\\gun_jump.png"));
 
         //create texture region for mario standing
-        stand = new TextureRegion(new Texture("sprites\\stand.png"));
+        stand = new TextureRegion(new Texture("sprites\\gun_stand.png"));
 
         //create dead mario texture region
-        dead = new TextureRegion(new Texture("sprites\\dead.png"));
+        dead = new TextureRegion(new Texture("sprites\\gun_dead.png"));
 
         //define mario in Box2d
         defineChell();
@@ -71,13 +75,25 @@ public class Chell extends Sprite{
         setBounds(0, 0, 16 / Platformer.SCALE, 16 / Platformer.SCALE);
         setRegion(stand);
 
+        lasers = new Array<Laser>();
      }
 
     public void update(float dt){
     	//update our sprite to correspond with the position of our Box2D body
         setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2 + 3 / (2 * Platformer.SCALE));
         //update sprite with the correct frame depending on marios current action
-        setRegion(getFrame(dt));    }
+        setRegion(getFrame(dt));    
+
+        for(Laser  ball : lasers) {
+            ball.update(dt);
+            if(ball.isDestroyed())
+            	lasers.removeValue(ball, true);
+        }
+        if(body.getPosition().y < -0.1) {
+        	die();
+        }
+
+    }
 
     public TextureRegion getFrame(float dt){
         //get marios current state. ie. jumping, running, standing...
@@ -104,15 +120,13 @@ public class Chell extends Sprite{
         }
 
         //if mario is running left and the texture isnt facing left... flip it.
-        if((body.getLinearVelocity().x < 0 || !runningRight) && !region.isFlipX()){
+        if((!lookingRight) && !region.isFlipX()){
             region.flip(true, false);
-            runningRight = false;
         }
 
         //if mario is running right and the texture isnt facing right... flip it.
-        else if((body.getLinearVelocity().x > 0 || runningRight) && region.isFlipX()){
+        else if((lookingRight) && region.isFlipX()){
             region.flip(true, false);
-            runningRight = true;
         }
 
         //if the current state is the same as the previous state increase the state timer.
@@ -154,8 +168,8 @@ public class Chell extends Sprite{
             for (Fixture fixture : body.getFixtureList()) {
                 fixture.setFilterData(filter);
             }
-
-            body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
+            
+            body.setLinearVelocity(new Vector2(0, 4f));
         }
     }
 
@@ -190,6 +204,7 @@ public class Chell extends Sprite{
         		               Platformer.ORANGE_GEL_BIT|
         		               Platformer.BLUE_GEL_BIT|
         		               Platformer.LIGHT_BRIDGE_BIT|
+        		               Platformer.POWER_BIT|
         		               Platformer.OBJECT_BIT;
 
         fdef.shape = shape;
@@ -197,7 +212,7 @@ public class Chell extends Sprite{
     }
 
     public void fire(){
-        //fireballs.add(new FireBall(screen, b2body.getPosition().x, b2body.getPosition().y, runningRight ? true : false));
+        lasers.add(new Laser(screen, body.getPosition().x, body.getPosition().y, lookingRight ? true : false));
     }
     
     public void overOrange(boolean b){
@@ -206,5 +221,11 @@ public class Chell extends Sprite{
 
     public void draw(Batch batch){
         super.draw(batch);
+        for(Laser ball : lasers)
+            ball.draw(batch);
+    }
+    
+    public void lookRight(boolean b) {
+    	lookingRight = b;
     }
 }
