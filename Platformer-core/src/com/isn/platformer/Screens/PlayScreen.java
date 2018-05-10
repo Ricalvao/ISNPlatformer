@@ -17,11 +17,14 @@ import com.isn.platformer.Platformer;
 import com.isn.platformer.Sprites.Chell;
 import com.isn.platformer.Sprites.Cube;
 import com.isn.platformer.Sprites.Enemy;
+import com.isn.platformer.TileObjects.Path;
 import com.isn.platformer.Tools.WorldContactListener;
 import com.isn.platformer.Tools.WorldCreator;
 
 public class PlayScreen implements Screen{
 	private Platformer game;
+	public int level;
+	private boolean restart;
 
     private OrthographicCamera gamecam;
     private Viewport gamePort;
@@ -33,15 +36,16 @@ public class PlayScreen implements Screen{
     //Box2d variables
     private World world;
     private Box2DDebugRenderer b2dr;
-    private WorldCreator creator;
+    public WorldCreator creator;
 
     //sprites
     private Chell player;
-    private Cube cube;
 
-    public PlayScreen(Platformer game){
+    public PlayScreen(Platformer game, int level){
 
     	this.game = game;
+    	this.level = level;
+    	restart = false;
         //create cam used to follow mario through cam world
         gamecam = new OrthographicCamera();
 
@@ -49,7 +53,7 @@ public class PlayScreen implements Screen{
         gamePort = new FitViewport(Platformer.SCREEN_WIDTH / Platformer.SCALE, Platformer.SCREEN_HEIGHT / Platformer.SCALE, gamecam);
 
         //Load our map and setup our map renderer
-        map = new TmxMapLoader().load("test1.tmx");
+        map = new TmxMapLoader().load("levels//test" + level + ".tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / Platformer.SCALE);
 
         //initially set our gamcam to be centered correctly at the start of of map
@@ -64,7 +68,6 @@ public class PlayScreen implements Screen{
 
         //create mario in our game world
         player = new Chell(this);
-        cube = new Cube(this, 50, 32);
 
         world.setContactListener(new WorldContactListener());
     }
@@ -106,6 +109,9 @@ public class PlayScreen implements Screen{
             		player.lookRight(false);
             	}
             }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            	restart = true;
+            }
         }
     }
 
@@ -119,11 +125,13 @@ public class PlayScreen implements Screen{
         player.update(dt);
         for(Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
-            if(enemy.getX() < player.getX() + 224 / Platformer.SCALE) {
-                enemy.body.setActive(true);
-            }
         }
-        cube.update(dt);
+        for(Cube cubes : creator.getCubes()) {
+        	cubes.update(dt);
+        }
+        for(Path paths : creator.getPaths()) {
+        	paths.update(dt);
+        }
 
         //attach our gamecam to our players.x coordinate
         if(player.currentState != Chell.State.DEAD) {
@@ -151,16 +159,40 @@ public class PlayScreen implements Screen{
         renderer.render();
 
         //renderer our Box2DDebugLines
-        b2dr.render(world, gamecam.combined);
+        //b2dr.render(world, gamecam.combined);
 
         game.batch.setProjectionMatrix(gamecam.combined);
         game.batch.begin();
         player.draw(game.batch);
         for (Enemy enemy : creator.getEnemies())
             enemy.draw(game.batch);
-        cube.draw(game.batch);
+        for (Cube cube : creator.getCubes())
+            cube.draw(game.batch);
         game.batch.end();
+
+        if(restart()){
+        	game.setScreen(new PlayScreen((Platformer) game, level));
+            dispose();
+        } else if(nextLevel()){
+        	game.setScreen(new PlayScreen((Platformer) game, level + 1));
+            dispose();
+        }
+
 	}
+
+    public boolean restart(){
+        if((player.currentState == Chell.State.DEAD && player.getStateTimer() > 2) || restart){
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean nextLevel(){
+        if(player.goal){
+            return true;
+        }
+        return false;
+    }
 
     public void resize(int width, int height) {
         //updated our game viewport

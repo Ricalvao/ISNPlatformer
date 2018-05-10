@@ -49,7 +49,8 @@ public class Laser extends Sprite{
         					   Platformer.ORANGE_GEL_BIT |
         					   Platformer.BLUE_GEL_BIT |
 		        			   Platformer.ENEMY_BIT |
-		        			   Platformer.OBJECT_BIT;
+		        			   Platformer.OBJECT_BIT|
+	                           Platformer.POWER_BIT;
         fdef.density = 10;
 
         fdef.shape = shape;
@@ -66,8 +67,6 @@ public class Laser extends Sprite{
             world.destroyBody(body);
             destroyed = true;
         }
-        if((fireRight && body.getLinearVelocity().x < 0) || (!fireRight && body.getLinearVelocity().x > 0))
-            setToDestroy();
     }
 
     public void setToDestroy(){

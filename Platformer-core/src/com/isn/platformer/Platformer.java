@@ -1,9 +1,6 @@
 package com.isn.platformer;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.isn.platformer.Screens.PlayScreen;
 
@@ -23,16 +20,17 @@ public class Platformer extends Game {
 	public static final short RED_GEL_BIT = 8;
 	public static final short ORANGE_GEL_BIT = 16;
 	public static final short BLUE_GEL_BIT = 32;
-	public static final short LIGHT_BRIDGE_BIT = 64;
+	public static final short TURN_BIT = 64;
 	public static final short LASER_BIT = 128;
 	public static final short OBJECT_BIT = 256;
 	public static final short POWER_BIT = 512;
+	public static final short GOAL_BIT = 1024;
 
 	public SpriteBatch batch;
 
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new PlayScreen(this));
+		setScreen(new PlayScreen(this, 1));
 	}
 
 	@Override

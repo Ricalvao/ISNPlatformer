@@ -1,4 +1,4 @@
-package com.isn.platformer.Gels;
+package com.isn.platformer.TileObjects;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -15,22 +15,28 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.isn.platformer.Platformer;
 import com.isn.platformer.Screens.PlayScreen;
 
-public abstract class Gel {
+public abstract class InteractiveTileObject {
 	protected World world;
 	protected TiledMap map;
     protected Rectangle bounds;
     protected Body body;
     protected PlayScreen screen;
     protected MapObject object;
+    TiledMapTileLayer layer;
+    int w;
+    int h;
 
     protected Fixture fixture;
 
-    public  Gel(PlayScreen screen, MapObject object){
+    public  InteractiveTileObject(PlayScreen screen, MapObject object){
         this.object = object;
         this.screen = screen;
         this.world = screen.getWorld();
         this.map = screen.getMap();
         this.bounds = ((RectangleMapObject) object).getRectangle();
+        layer = (TiledMapTileLayer) map.getLayers().get(1);
+        w = (int)bounds.getWidth() /16;
+        h= (int)bounds.getHeight() /16;
 
         BodyDef bdef = new BodyDef();
         FixtureDef fdef = new FixtureDef();
@@ -54,10 +60,7 @@ public abstract class Gel {
     }
 
     public TiledMapTileLayer.Cell[] getCells(){
-        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
         TiledMapTileLayer.Cell[] tiles;
-        int w = (int)bounds.getWidth() /16;
-        int h = (int)bounds.getHeight() /16;
 	        
         if(w > 1) {
         	tiles = new TiledMapTileLayer.Cell[w];
@@ -74,5 +77,13 @@ public abstract class Gel {
         	}
         	return tiles;
         }
+    }
+    
+
+    public TiledMapTileLayer.Cell getSource() {
+    	if(w > 1) {
+        	return layer.getCell((int)(body.getPosition().x * Platformer.SCALE / 16 - w/2 - 1), (int)(body.getPosition().y * Platformer.SCALE / 16));
+        } else {
+        	return layer.getCell((int)(body.getPosition().x * Platformer.SCALE / 16), (int)(body.getPosition().y * Platformer.SCALE / 16 - h/2 - 1));        }
     }
 }

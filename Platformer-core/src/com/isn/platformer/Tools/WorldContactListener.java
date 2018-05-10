@@ -6,11 +6,12 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.isn.platformer.Platformer;
-import com.isn.platformer.Gels.RedGel;
 import com.isn.platformer.Sprites.Chell;
 import com.isn.platformer.Sprites.Cube;
 import com.isn.platformer.Sprites.Enemy;
 import com.isn.platformer.Sprites.Laser;
+import com.isn.platformer.TileObjects.Path;
+import com.isn.platformer.TileObjects.RedGel;
 
 public class WorldContactListener implements ContactListener {
     @Override
@@ -21,7 +22,9 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
         switch (cDef){
-            case Platformer.ENEMY_BIT | Platformer.GROUND_BIT:
+            case Platformer.ENEMY_BIT | Platformer.OBJECT_BIT:
+            case Platformer.ENEMY_BIT | Platformer.POWER_BIT:
+            case Platformer.ENEMY_BIT | Platformer.TURN_BIT:
                 if(fixA.getFilterData().categoryBits == Platformer.ENEMY_BIT)
                     ((Enemy)fixA.getUserData()).reverseVelocity(true, false);
                 else
@@ -60,6 +63,7 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             case Platformer.LASER_BIT | Platformer.GROUND_BIT:
+            case Platformer.LASER_BIT | Platformer.POWER_BIT:
             	if(fixA.getFilterData().categoryBits == Platformer.LASER_BIT) {
                     ((Laser)fixA.getUserData()).setToDestroy();
                 } else {
@@ -74,6 +78,12 @@ public class WorldContactListener implements ContactListener {
                 	((Laser)fixB.getUserData()).setToDestroy();
                     ((Cube)fixA.getUserData()).turnOn();
                 }
+                break;
+            case Platformer.CHELL_BIT | Platformer.GOAL_BIT:
+                if(fixA.getFilterData().categoryBits == Platformer.CHELL_BIT)
+                    ((Chell) fixA.getUserData()).reachedGoal();
+                else
+                    ((Chell) fixB.getUserData()).reachedGoal();
                 break;
         }
     }

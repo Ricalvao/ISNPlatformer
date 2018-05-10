@@ -36,6 +36,7 @@ public class Chell extends Sprite{
     private PlayScreen screen;
     
     public boolean orange;
+    public boolean goal;
 
     private Array<Laser> lasers;
     
@@ -203,9 +204,9 @@ public class Chell extends Sprite{
         		               Platformer.RED_GEL_BIT|
         		               Platformer.ORANGE_GEL_BIT|
         		               Platformer.BLUE_GEL_BIT|
-        		               Platformer.LIGHT_BRIDGE_BIT|
         		               Platformer.POWER_BIT|
-        		               Platformer.OBJECT_BIT;
+        		               Platformer.OBJECT_BIT|
+        		               Platformer.GOAL_BIT;
 
         fdef.shape = shape;
         body.createFixture(fdef).setUserData(this);
@@ -227,5 +228,9 @@ public class Chell extends Sprite{
     
     public void lookRight(boolean b) {
     	lookingRight = b;
+    }
+    
+    public void reachedGoal() {
+    	goal = true;
     }
 }

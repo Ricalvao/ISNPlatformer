@@ -32,8 +32,7 @@ public class Enemy extends Sprite{
         setPosition(x, y);
         defineEnemy();
         
-        velocity = new Vector2(1, -2);
-        body.setActive(false);
+        velocity = new Vector2(-1, -2);
         
         frames = new Array<TextureRegion>();
         for(int i = 1; i < 3; i++) {
@@ -80,11 +79,11 @@ public class Enemy extends Sprite{
 	                           Platformer.RED_GEL_BIT|
 	                           Platformer.ORANGE_GEL_BIT|
 	                           Platformer.BLUE_GEL_BIT|
-	                           Platformer.LIGHT_BRIDGE_BIT|
 	                           Platformer.CHELL_BIT|
 	                           Platformer.OBJECT_BIT|
         		               Platformer.POWER_BIT|
-	                           Platformer.LASER_BIT;
+	                           Platformer.LASER_BIT|
+	                           Platformer.TURN_BIT;
 
         fdef.shape = shape;
         body.createFixture(fdef).setUserData(this);
