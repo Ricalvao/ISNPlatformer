@@ -17,6 +17,7 @@ import com.isn.platformer.Platformer;
 import com.isn.platformer.Sprites.Chell;
 import com.isn.platformer.Sprites.Cube;
 import com.isn.platformer.Sprites.Enemy;
+import com.isn.platformer.TileObjects.BlueGel;
 import com.isn.platformer.TileObjects.Path;
 import com.isn.platformer.Tools.WorldContactListener;
 import com.isn.platformer.Tools.WorldCreator;
@@ -83,11 +84,45 @@ public class PlayScreen implements Screen{
         	if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
                 player.jump();
         	
-            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+        	if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
                 player.fire();
+        	
+            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            	for (BlueGel blueGel : creator.getBlueGels())
+            		if(blueGel.getBounciness() != 1.2f)
+                    	blueGel.setBounciness(1.2f);
+            } else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+            	for (BlueGel blueGel : creator.getBlueGels())
+                    if(blueGel.getBounciness() != 0.5f)
+                    	blueGel.setBounciness(0.5f);
+            } else {
+            	for (BlueGel blueGel : creator.getBlueGels())
+                    if(blueGel.getBounciness() != 1f)
+                    	blueGel.setBounciness(1f);
+            }
             
-            if(!player.orange) {
+            if(player.orange) {
+            	if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.body.getLinearVelocity().x <= 6) {
+            		player.body.applyLinearImpulse(new Vector2(0.4f, 0), player.body.getWorldCenter(), true);
+        			player.lookRight(true);
+            	}
             	
+            	if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.body.getLinearVelocity().x >= -6) {
+            		player.body.applyLinearImpulse(new Vector2(-0.4f, 0), player.body.getWorldCenter(), true);
+            		player.lookRight(false);
+            	}
+            	
+            } else if(player.green){
+            	if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.body.getLinearVelocity().y <= .5f) {
+            		player.body.applyLinearImpulse(new Vector2(0, .5f), player.body.getWorldCenter(), true);
+            		player.lookRight(true);
+            	}
+            	
+            	if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.body.getLinearVelocity().y <= .5f) {
+            		player.body.applyLinearImpulse(new Vector2(0, .5f), player.body.getWorldCenter(), true);
+            		player.lookRight(false);
+            	}
+            } else {
             	if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.body.getLinearVelocity().x <= 2) {
             		player.body.applyLinearImpulse(new Vector2(0.1f, 0), player.body.getWorldCenter(), true);
             		player.lookRight(true);
@@ -95,17 +130,6 @@ public class PlayScreen implements Screen{
             	
             	if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.body.getLinearVelocity().x >= -2) {
             		player.body.applyLinearImpulse(new Vector2(-0.1f, 0), player.body.getWorldCenter(), true);
-        			player.lookRight(false);
-            	}
-            } else {
-            	
-            	if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.body.getLinearVelocity().x <= 8) {
-            		player.body.applyLinearImpulse(new Vector2(0.4f, 0), player.body.getWorldCenter(), true);
-        			player.lookRight(true);
-            	}
-            	
-            	if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.body.getLinearVelocity().x >= -8) {
-            		player.body.applyLinearImpulse(new Vector2(-0.4f, 0), player.body.getWorldCenter(), true);
             		player.lookRight(false);
             	}
             }

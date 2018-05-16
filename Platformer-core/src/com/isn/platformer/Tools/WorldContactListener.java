@@ -30,6 +30,7 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Enemy)fixB.getUserData()).reverseVelocity(true, false);
                 break;
+            case Platformer.CHELL_BIT | Platformer.PURPLE_GEL_BIT:
             case Platformer.CHELL_BIT | Platformer.ENEMY_BIT:
                 if(fixA.getFilterData().categoryBits == Platformer.CHELL_BIT)
                     ((Chell) fixA.getUserData()).die();
@@ -85,6 +86,12 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Chell) fixB.getUserData()).reachedGoal();
                 break;
+            case Platformer.CHELL_HANDS_BIT | Platformer.GREEN_GEL_BIT:
+                if(fixA.getFilterData().categoryBits == Platformer.CHELL_BIT)
+                    ((Chell) fixA.getUserData()).touchGreen(true);
+                else
+                    ((Chell) fixB.getUserData()).touchGreen(true);
+                break;
         }
     }
 
@@ -108,6 +115,12 @@ public class WorldContactListener implements ContactListener {
                 } else {
                 	((RedGel)fixA.getUserData()).turnOnOff(false);
                 }
+                break;
+            case Platformer.CHELL_HANDS_BIT | Platformer.GREEN_GEL_BIT:
+                if(fixA.getFilterData().categoryBits == Platformer.CHELL_BIT)
+                    ((Chell) fixA.getUserData()).touchGreen(false);
+                else
+                    ((Chell) fixB.getUserData()).touchGreen(false);
                 break;
         }
     }

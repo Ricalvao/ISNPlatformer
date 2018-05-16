@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="2018.04.18" orientation="orthogonal" renderorder="left-down" width="100" height="13" tilewidth="16" tileheight="16" infinite="0" nextobjectid="23">
+<map version="1.0" tiledversion="2018.04.18" orientation="orthogonal" renderorder="left-down" width="100" height="13" tilewidth="16" tileheight="16" infinite="0" nextobjectid="24">
  <tileset firstgid="1" name="Tileset" tilewidth="16" tileheight="16" spacing="2" margin="1" tilecount="924" columns="33">
   <image source="TESTures.png" width="594" height="504"/>
  </tileset>
@@ -62,15 +62,15 @@
   <object id="19" x="1392" y="96" width="32" height="16"/>
  </objectgroup>
  <objectgroup name="path"/>
- <objectgroup name="turn">
-  <object id="20" x="-26" y="321.5" width="72.5" height="1"/>
- </objectgroup>
+ <objectgroup name="turn"/>
  <objectgroup name="red gel"/>
  <objectgroup name="orange gel"/>
  <objectgroup name="blue gel"/>
  <objectgroup name="enemies"/>
+ <objectgroup name="purple gel"/>
+ <objectgroup name="green gel"/>
  <objectgroup name="cubes"/>
  <objectgroup name="goal">
-  <object id="22" x="1552" y="128" width="16" height="16"/>
+  <object id="23" x="1488" y="144" width="96" height="16"/>
  </objectgroup>
 </map>

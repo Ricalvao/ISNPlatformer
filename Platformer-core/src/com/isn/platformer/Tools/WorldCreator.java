@@ -14,6 +14,7 @@ import com.isn.platformer.Platformer;
 import com.isn.platformer.Screens.PlayScreen;
 import com.isn.platformer.Sprites.Cube;
 import com.isn.platformer.Sprites.Enemy;
+import com.isn.platformer.TileObjects.BlueGel;
 import com.isn.platformer.TileObjects.Path;
 import com.isn.platformer.TileObjects.RedGel;
 
@@ -21,6 +22,7 @@ public class WorldCreator {
 	private Array<Enemy> enemies;
 	public Array<Cube> cubes;
 	public Array<Path> paths;
+	public Array<BlueGel> blueGels;
 	
 	public WorldCreator(PlayScreen screen){
         World world = screen.getWorld();
@@ -83,19 +85,9 @@ public class WorldCreator {
         }
         
         //create blue bodies/fixtures
+        blueGels = new Array<BlueGel>();
         for(MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) / Platformer.SCALE, (rect.getY() + rect.getHeight() / 2) / Platformer.SCALE);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox(rect.getWidth() / 2 / Platformer.SCALE, rect.getHeight() / 2 / Platformer.SCALE);
-            fdef.shape = shape;
-            fdef.restitution = 1.2f;
-            fdef.filter.categoryBits = Platformer.BLUE_GEL_BIT;
-            body.createFixture(fdef);
+        	blueGels.add(new BlueGel(screen, object));
         }
         
       //create path bodies/fixtures
@@ -113,12 +105,42 @@ public class WorldCreator {
         
       //create all cubes
         cubes = new Array<Cube>();
-        for(MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)){
+        for(MapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             cubes.add(new Cube(screen, rect.getX() / Platformer.SCALE, rect.getY() / Platformer.SCALE, false));
         }
         
       //create goal bodies/fixtures
+        for(MapObject object : map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set((rect.getX() + rect.getWidth() / 2) / Platformer.SCALE, (rect.getY() + rect.getHeight() / 2) / Platformer.SCALE);
+
+            body = world.createBody(bdef);
+
+            shape.setAsBox(rect.getWidth() / 2 / Platformer.SCALE, rect.getHeight() / 2 / Platformer.SCALE);
+            fdef.shape = shape;
+            fdef.filter.categoryBits = Platformer.GOAL_BIT;
+            body.createFixture(fdef);
+        }
+        
+      //create purple bodies/fixtures
+        for(MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)){
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set((rect.getX() + rect.getWidth() / 2) / Platformer.SCALE, (rect.getY() + rect.getHeight() / 2) / Platformer.SCALE);
+
+            body = world.createBody(bdef);
+
+            shape.setAsBox(rect.getWidth() / 2 / Platformer.SCALE, rect.getHeight() / 2 / Platformer.SCALE);
+            fdef.shape = shape;
+            fdef.filter.categoryBits = Platformer.PURPLE_GEL_BIT;
+            body.createFixture(fdef);
+        }
+        
+      //create green bodies/fixtures
         for(MapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
@@ -129,8 +151,8 @@ public class WorldCreator {
 
             shape.setAsBox(rect.getWidth() / 2 / Platformer.SCALE, rect.getHeight() / 2 / Platformer.SCALE);
             fdef.shape = shape;
-            fdef.restitution = 1.2f;
-            fdef.filter.categoryBits = Platformer.GOAL_BIT;
+            fdef.friction = 1f;
+            fdef.filter.categoryBits = Platformer.GREEN_GEL_BIT;
             body.createFixture(fdef);
         }
 	}
@@ -145,5 +167,9 @@ public class WorldCreator {
 	
 	public Array<Path> getPaths() {
         return paths;
+    }
+	
+	public Array<BlueGel> getBlueGels() {
+        return blueGels;
     }
 }

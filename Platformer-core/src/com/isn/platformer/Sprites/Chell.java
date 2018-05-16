@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.isn.platformer.Platformer;
@@ -36,6 +37,7 @@ public class Chell extends Sprite{
     private PlayScreen screen;
     
     public boolean orange;
+    public boolean green;
     public boolean goal;
 
     private Array<Laser> lasers;
@@ -206,9 +208,27 @@ public class Chell extends Sprite{
         		               Platformer.BLUE_GEL_BIT|
         		               Platformer.POWER_BIT|
         		               Platformer.OBJECT_BIT|
-        		               Platformer.GOAL_BIT;
+        		               Platformer.GOAL_BIT|
+        		               Platformer.PURPLE_GEL_BIT|
+        		               Platformer.GREEN_GEL_BIT;
 
         fdef.shape = shape;
+        body.createFixture(fdef).setUserData(this);
+        
+        PolygonShape hands = new PolygonShape();
+        Vector2[] vertice = new Vector2[6];
+        vertice[0] = new Vector2(-6, 2).scl(1 / Platformer.SCALE);
+        vertice[1] = new Vector2(-6, -2).scl(1 / Platformer.SCALE);
+        vertice[2] = new Vector2(-4, -4).scl(1 / Platformer.SCALE);
+        vertice[3] = new Vector2(4, -4).scl(1 / Platformer.SCALE);
+        vertice[4] = new Vector2(6, -2).scl(1 / Platformer.SCALE);
+        vertice[5] = new Vector2(6, 2).scl(1 / Platformer.SCALE);
+        hands.set(vertice);
+
+        fdef.filter.categoryBits = Platformer.CHELL_HANDS_BIT;
+        fdef.shape = hands;
+        fdef.isSensor = true;
+
         body.createFixture(fdef).setUserData(this);
     }
 
@@ -218,6 +238,10 @@ public class Chell extends Sprite{
     
     public void overOrange(boolean b){
     	orange = b;
+    }
+    
+    public void touchGreen(boolean b){
+    	green = b;
     }
 
     public void draw(Batch batch){

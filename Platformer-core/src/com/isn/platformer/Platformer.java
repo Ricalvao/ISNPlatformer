@@ -25,12 +25,15 @@ public class Platformer extends Game {
 	public static final short OBJECT_BIT = 256;
 	public static final short POWER_BIT = 512;
 	public static final short GOAL_BIT = 1024;
+	public static final short PURPLE_GEL_BIT = 2048;
+	public static final short CHELL_HANDS_BIT = 4096;
+	public static final short GREEN_GEL_BIT = 8192;
 
 	public SpriteBatch batch;
 
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new PlayScreen(this, 1));
+		setScreen(new PlayScreen(this, 6));
 	}
 
 	@Override
